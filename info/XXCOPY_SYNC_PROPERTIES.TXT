@@ -1,0 +1,3 @@
+C:\|H:\MIRROR_FROM_LAPTOP_C\||A|
+D:\|H:\MIRROR_FROM_LAPTOP\|backup1|backup2|/X*.!ut /Xpagefile.sys /X*.tmp /XFirefoxPortable\ /Xtrc\ /XSystem*\ /XEmpty\  /XD:\shibu\wget\ /XuTorrentPortable\ /X$RECYCLE.BIN\ /XD:\1-movies\TV\Seinfeld_Complete_Boxset\ /XD:\sw_essentials\ /XD:\ir\audio\dubbed\telugu\3gp\ /XD:\sw3\swf-1\game.interes.ge\|
+O:\00_Software\00_sw_essentials\sw_essentials\|E:\sw_essentials\|backup1|backup2|
