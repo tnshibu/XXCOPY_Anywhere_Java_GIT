@@ -53,7 +53,7 @@ public class XXCOPY_Anywhere {
         }
         SRC_BASE_FOLDER               = "";
         DST_BASE_FOLDER               = "";
-        OTHER_PARAMS                  = "";
+        //OTHER_PARAMS                  = "";
 
         String oneLine = configFileLineArray.get(j);
 		oneLine = oneLine.trim();
@@ -73,15 +73,19 @@ public class XXCOPY_Anywhere {
         if(stringArray.length >= 2) {
             DST_BASE_FOLDER = stringArray[1];
         }
+        if(SRC_BASE_FOLDER.equals("EXCLUDE")) {
+            OTHER_PARAMS = DST_BASE_FOLDER;
+        }
         
         System.out.println("From Config File - SRC_BASE_FOLDER          = "+SRC_BASE_FOLDER );
         System.out.println("From Config File - DST_BASE_FOLDER          = "+DST_BASE_FOLDER );
+        System.out.println("From Config File - OTHER_PARAMS             = "+OTHER_PARAMS    );
 
         int i = userCurrentDir.indexOf(SRC_BASE_FOLDER);
 		if(i == -1) {
 			SRC_BASE_FOLDER               = "";
 			DST_BASE_FOLDER               = "";
-			OTHER_PARAMS                  = "";
+			//OTHER_PARAMS                  = "";
 			continue;
 		}
         if(i > -1) {
