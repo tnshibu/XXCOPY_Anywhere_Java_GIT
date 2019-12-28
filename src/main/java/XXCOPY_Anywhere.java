@@ -17,9 +17,10 @@ public class XXCOPY_Anywhere {
   private static String command = "";
   private static String SYNC_COMMAND_BATCH_FILE = "xxco.bat";
   private static FileOutputStream batchFileOutputStream = null;
+  private static List<String> drivesList = new ArrayList<String>();
   /******************************************************************************************/
   public static void main(String[] args) throws Exception {
-
+    populateDrivesList();
     setFolderNames();
       
 	batchFileOutputStream = new FileOutputStream (new File(SYNC_COMMAND_BATCH_FILE));
@@ -68,10 +69,10 @@ public class XXCOPY_Anywhere {
         System.out.println("oneLine = "+oneLine );
         String[] stringArray = oneLine.split("=");
         if(stringArray.length >= 1) {
-            SRC_BASE_FOLDER = stringArray[0];
+            SRC_BASE_FOLDER = stringArray[0].trim();
         }
         if(stringArray.length >= 2) {
-            DST_BASE_FOLDER = stringArray[1];
+            DST_BASE_FOLDER = stringArray[1].trim();
         }
         if(SRC_BASE_FOLDER.equals("EXCLUDE")) {
             OTHER_PARAMS = DST_BASE_FOLDER;
@@ -80,6 +81,27 @@ public class XXCOPY_Anywhere {
         System.out.println("From Config File - SRC_BASE_FOLDER          = "+SRC_BASE_FOLDER );
         System.out.println("From Config File - DST_BASE_FOLDER          = "+DST_BASE_FOLDER );
         System.out.println("From Config File - OTHER_PARAMS             = "+OTHER_PARAMS    );
+
+        if(SRC_BASE_FOLDER.contains("?")) {
+            SRC_BASE_FOLDER = replaceLogicalWithPhysicalDriveLetter(SRC_BASE_FOLDER);
+        } else {
+            System.out.println("SRC Physical path   :"+SRC_BASE_FOLDER);
+        }
+        if(DST_BASE_FOLDER.contains("?")) {
+            DST_BASE_FOLDER = replaceLogicalWithPhysicalDriveLetter(DST_BASE_FOLDER);
+        } else {
+            System.out.println("DST Physical path   :"+DST_BASE_FOLDER);
+        }
+
+        if(SRC_BASE_FOLDER.endsWith("\\")) {
+            SRC_BASE_FOLDER = SRC_BASE_FOLDER.substring(0,SRC_BASE_FOLDER.length()-1);
+        }
+        if(DST_BASE_FOLDER.endsWith("\\")) {
+            DST_BASE_FOLDER = DST_BASE_FOLDER.substring(0,DST_BASE_FOLDER.length()-1);
+        }
+        System.out.println("From Config File - SRC_BASE_FOLDER_2        = "+SRC_BASE_FOLDER );
+        System.out.println("From Config File - DST_BASE_FOLDER_2        = "+DST_BASE_FOLDER );
+    
 
         int i = userCurrentDir.indexOf(SRC_BASE_FOLDER);
 		if(i == -1) {
@@ -136,4 +158,35 @@ public class XXCOPY_Anywhere {
       return "";
   }
   /******************************************************************************************/
+    /******************************************************************************************/
+    public static String getLogicalDriveLetter(String driveLetter) throws Exception {
+        Map hm = PropertiesLoader.load(driveLetter+":/DRIVE_NAME.TXT");
+        String logicalDriveLetter = (String)hm.get("LOGIAL_DRIVE_LETTER");
+        return logicalDriveLetter.trim();
+    }
+    /******************************************************************************************/
+    public static void populateDrivesList() throws Exception {
+        File[] paths;
+        paths = File.listRoots();
+        for(File path:paths) {
+            //System.out.println("Drive Letter: "+path.toString().substring(0,1));
+            drivesList.add(path.toString().substring(0,1));
+        }
+        System.out.println("Drive Letters: "+drivesList);
+    }
+    /******************************************************************************************/
+    public static String replaceLogicalWithPhysicalDriveLetter(String inputFolder) {
+        for(String driveLetter : drivesList) {
+            String tempInputFolder = inputFolder.replaceAll("\\?",driveLetter);
+            File file = new File(tempInputFolder);
+            if(file.exists()) {
+                System.out.println("Input path      : "+inputFolder);
+                System.out.println("Modified path   : "+tempInputFolder);
+                return tempInputFolder;
+            }
+        }
+        System.out.println("Unmodified path : "+inputFolder);
+        return inputFolder;
+    }
+    /******************************************************************************************/
 }
